@@ -8,13 +8,14 @@ var express     = require("express"),
     LocalStrategy = require("passport-local"),
     methodOverride = require("method-override"),
     Campground  = require("./models/campground"),
+    Blog = require("./models/blog"),
     Comment     = require("./models/comment"),
     User        = require("./models/user"),
     seedDB      = require("./seeds")
 
 //requiring routes
 var commentRoutes    = require("./routes/comments"),
-    campgroundRoutes = require("./routes/campgrounds"),
+    blogRoutes = require("./routes/blog"),
     indexRoutes      = require("./routes/index")
  
 const mongoDB = ("mongodb+srv://"+
@@ -56,8 +57,8 @@ app.use(function(req, res, next){
 });
 
 app.use("/", indexRoutes);
-app.use("/campgrounds", campgroundRoutes);
-app.use("/campgrounds/:id/comments", commentRoutes);
+app.use("/blogs", blogRoutes);
+app.use("/blogs/:id/comments", commentRoutes);
 
 
 app.listen(process.env.PORT, process.env.IP, function(){
