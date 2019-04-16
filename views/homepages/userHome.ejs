@@ -83,29 +83,74 @@
             </div>
         <% } %>
     </div>
+    <header class="jumbotron">
+        <div>
+            <h1>Welcome to Travel Blog! <%= info.user.username %></h1>
+            <p>View your blogs and comments.</p>
+            <div class="user-profile">
+                <div><img class="img-user" src="<%= info.user.image %>"></div>
+                <div style="font-weight: bold; margin-top: 20px;"><%= info.user.username %></div>
+            </div>
+            <!-- <figure>
+                <img src="<%= info.user.image %>">
+                <figcaption><%= info.user.username %></figcaption>
+            </figure> -->
+            <p>
+                <a class="btn btn-primary btn-large" href="/blogs/new">Add New Campground</a>
+            </p>
+        </div>
+    </header>
+
+    <div class="container showBlog">
+        <div>
+            <% info.blogs.forEach(function(blog){ %>
+            <div class="thumbnail" style="padding:0 30px;">
+                <div class="row">
+                    <div class="col-md-6" style="padding-top: 20px;"><img class="img-responsive" style="width: 100%" src="<%= blog.image %>"></div>
+                    <div class="col-md-6">
+                        <h4><a><%= blog.name %></a></h4>
+                        <p style="margin-top: 20px;"><%= blog.description %></p>
+                        <p>
+                            <em>Submitted By <%= info.user.username %> at <%= blog.time %></em>
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-1 col-3">
+                        <a class="btn btn-xs btn-warning blog-btn" href="/blogs/<%= blog._id %>/edit">Edit</a>
+                    </div>
+                    <div class="col-md-1 col-3">
+                        <form id="delete-form" action="/blogs/<%= blog._id %>?_method=DELETE" method="POST">
+                            <button class="btn btn-xs btn-danger blog-btn">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <% }); %>
+        </div>
+        </html>
+
     
     <div class="container">
-        <div><img src="<%= info.user.image %>"></div>
-        <div>
-            <%= info.user.username %>
-        </div>
-        <div class="row">        
-            <div>
-                <% info.blogs.forEach(function(blog){ %>
-                    <div class="col-sm-12 col-12 col-lg-3 ">
-                        <div class="thumbnail gallery">
-                            <img src="<%= blog.image %>">
-                            <div class="caption">
-                                <h4><%= blog.name %></h4>
-                            </div>
-                            <p>
-                                <a href="/blogs/<%= blog._id %>" class="btn btn-primary">More Info</a>
-                            </p>
+        <div class="row text-center" style="display:flex; flex-wrap: wrap;">
+            <% info.blogs.forEach(function(blog){ %>
+                <div class="col-sm-12 col-12 col-lg-3 ">
+                    <div class="thumbnail gallery">
+                        <img src="<%= blog.image %>">
+                        <div class="caption">
+                            <h4><%= blog.name %></h4>
                         </div>
+                        <p>
+                            <a href="/blogs/<%= blog._id %>" class="btn btn-primary">More Info</a>
+                        </p>
                     </div>
-                <% }); %>
-            </div>
+                </div>
+            <% }); %>
         </div>
     </div>
+    </body>
+    
+    
+    
 
 <% include ../partials/footer %>
