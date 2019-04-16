@@ -30,16 +30,19 @@ router.post("/",middleware.isLoggedIn,function(req, res){
                req.flash("error", "Something went wrong");
                console.log(err);
            } else {
-               //add username and id to comment
-               comment.author.id = req.user._id;
-               comment.author.username = req.user.username;
-               //save comment
-               comment.save();
-               blog.comments.push(comment);
-               blog.save();
-               console.log(comment);
-               req.flash("success", "Successfully added comment");
-               res.redirect('/blogs/' + blog._id);
+                //add username and id to comment
+                comment.author.id = req.user._id;
+                comment.author.username = req.user.username;
+                comment.time = new Date();
+                comment.time = comment.time.toString();
+                comment.time = comment.time.substring(0, comment.time.length - 21);
+                //save comment
+                comment.save();
+                blog.comments.push(comment);
+                blog.save();
+                console.log(comment);
+                req.flash("success", "Successfully added comment");
+                res.redirect('/blogs/' + blog._id);
            }
         });
        }

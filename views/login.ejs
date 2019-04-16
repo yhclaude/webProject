@@ -3,9 +3,9 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 
 <div class="container">
+    <h1 class="login-header">Log In</h1>
     <div class="row">
-        <h1 style="text-align: center">Log In</h1>
-        <div style="width: 30%; margin: 25px auto;">
+        <div class="login-div">
             <form action="/login" method="post">
                 <div class="form-group">
                     <input class="form-control" type="text" name="username" placeholder="username" required>
@@ -17,8 +17,8 @@
                     <button class="btn btn-lg btn-primary btn-block">Login</button>
                 </div>
             </form>
-            <a href="#">
-                <i class="fa fa-github"></i> Login with Github
+            <a href="/register">
+                No account? Register
             </a>
             <a href="/adminLogin" class="admin">Log in as an Admin</a>
         </div>

@@ -8,12 +8,13 @@ var middleware = require("../middleware");
 router.get("/", function(req, res){
     // Get all blogs from DB
     Blog.find({"check": true}, function(err, allBlogs){
-       if(err){
-           console.log(err);
-       } else {
-           //res.send(allBlogs);
-          res.render("blogs/index",{blogs:allBlogs});
-       }
+        if(err){
+            req.flash("error", err.message);
+            res.render("landing");
+        } else {
+            //res.send(allBlogs);
+            res.render("blogs/index",{blogs:allBlogs});
+        }
     });
 });
 
@@ -25,15 +26,20 @@ router.post("/", middleware.isLoggedIn, function(req, res){
     var desc = req.body.description;
     var author = {
         id: req.user._id,
-        username: req.user.username
-    }
+        username: req.user.username,
+        image: req.user.image
+    };
+    var time = new Date();
+    time = time.toString();
+    time = time.substring(0, time.length - 21);
     // new 2 lines!
     var check = false;
-    var newBlog = {name: name, image: image, description: desc, author:author, check:check}
+    var newBlog = {name: name, image: image, description: desc, author:author, check:check, time: time};
     // Create a new blog and save to DB
     Blog.create(newBlog, function(err, newlyCreated){
         if(err){
-            console.log(err);
+            req.flash("error", err.message);
+            res.render("landing");
         } else {
             //redirect back to blogs page
             console.log(newlyCreated);
@@ -50,9 +56,11 @@ router.get("/new", middleware.isLoggedIn, function(req, res){
 // SHOW - shows more info about one blog
 router.get("/:id", function(req, res){
     //find the blog with provided ID
+
     Blog.findById(req.params.id).populate("comments").exec(function(err, foundBlog){
         if(err){
-            console.log(err);
+            req.flash("error", err.message);
+            res.render("landing");
         } else {
             console.log(foundBlog)
             //render show template with that blog
@@ -73,7 +81,8 @@ router.put("/:id",middleware.checkBlogOwnership, function(req, res){
     // find and update the correct blog
     Blog.findByIdAndUpdate(req.params.id, req.body.blog, function(err, updatedBlog){
        if(err){
-           res.redirect("/blogs");
+            req.flash("error", err.message);
+            res.redirect("/blogs");
        } else {
            //redirect somewhere(show page)
            res.redirect("/blogs/" + req.params.id);
@@ -85,14 +94,13 @@ router.put("/:id",middleware.checkBlogOwnership, function(req, res){
 router.delete("/:id",middleware.checkBlogOwnership, function(req, res){
     Blog.findByIdAndRemove(req.params.id, function(err){
       if(err){
-          console.log(err);
+            req.flash("error", err.message);
           res.redirect("/blogs");
       } else {
           res.redirect("/blogs");
       }
    });
 });
-
 
 module.exports = router;
 

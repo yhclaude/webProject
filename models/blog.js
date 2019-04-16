@@ -5,18 +5,20 @@ var BlogSchema = new mongoose.Schema({
    check: Boolean,
    image: String,
    description: String,
+   time: String,
    author: {
-      id: {
-         type: mongoose.Schema.Types.ObjectId,
-         ref: "User"
-      },
-      username: String
+        id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
+        },
+        username: String,
+        image: String
    },
    comments: [
-      {
-         type: mongoose.Schema.Types.ObjectId,
-         ref: "Comment"
-      }
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Comment"
+        }
    ]
 });
    

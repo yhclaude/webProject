@@ -9,34 +9,50 @@ var express     = require("express"),
     Blog  = require("./models/blog"),
     Comment     = require("./models/comment"),
     User        = require("./models/user"),
-    seedDB      = require("./seeds");
-   //  port        = 9292;
-    
+    GithubStrategy = require('passport-github').Strategy;
+    dotenvConfig = require('dotenv').config();
+
 //requiring routes
 var commentRoutes    = require("./routes/comments"),
     blogRoutes = require("./routes/blogs"),
-    indexRoutes      = require("./routes/index")
- 
-// var url = process.env.DATABASEURL || "mongodb://localhost/yelp_camp_v10";
-// var uri = 'mongodb://JamesLin:<Lin!960605>@cluster0-x6qm9.mongodb.net/travelBlog?retryWrites=true'
-// mongoose.connect(uri);
+    indexRoutes      = require("./routes/index"),
+    userRoutes      = require("./routes/user")
 
+// connect mongo
 const mongoDB = ("mongodb+srv://"+
-                 "yuh_claude"+
+                 process.env.USERNAME+
                  ":"
-                 +"12545219500hy"+
+                 +process.env.PASSWORD+
                  "@"
-                 +"cutie-wgsgm.mongodb.net"+
+                 +process.env.HOST+
                  "/"
-                 +"camp");
+                 +process.env.DATABASE);
+
 mongoose.connect(mongoDB, {useNewUrlParser: true, retryWrites: true});
 
+// middleware used
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
 app.use(flash());
-// seedDB(); //seed the database
+
+// github
+// passport.use(new GithubStrategy({
+//     clientID: process.env.GITHUB_CLIENT_ID,
+//     clientSecret: process.env.GITHUB_CLIENT_SECRET,
+//     callbackURL: 'https://'+process.env.PROJECT_DOMAIN+'.glitch.me/login/github/return',
+// },
+// function(token, tokenSecret, profile, cb) {
+//     return cb(null, profile);
+// }));
+// passport.serializeUser(function(user, done) {
+//     done(null, user);
+// });
+// passport.deserializeUser(function(obj, done) {
+//     done(null, obj);
+// });
+
 
 // PASSPORT CONFIGURATION
 app.use(require("express-session")({
@@ -47,76 +63,9 @@ app.use(require("express-session")({
 
 app.use(passport.initialize());
 app.use(passport.session());
-
-//passport.use(new LocalStrategy(User.authenticate()));
-passport.use(new LocalStrategy(
-   function(username, password, done) {
-       User.findOne({
-         username: username
-       }, function(err, user) {
-         if (err) {
-            Admin.findOne({username:username}, function(err, admin) {
-               if (err) {
-                  return done(err);
-               }
-               if (!admin) {
-                  return done(null, false);
-               }
-               if (admin.password != password) {
-                  return done(null, false);
-               }
-               return done(null, admin);
-            });
-           return done(err);
-         }
- 
-         if (!user) {
-           return done(null, false);
-         }
- 
-         if (user.password != password) {
-           return done(null, false);
-         }
-         return done(null, user);
-       });
-   }))
-//passport.serializeUser(User.serializeUser());
-//passport.deserializeUser(User.deserializeUser());
-
-// passport.serializeUser(function (entity, done) {
-//    done(null, { id: entity.id, type: entity.type });
-// });
-
-passport.deserializeUser(function (obj, done) {
-   switch (obj.type) {
-       case 'user':
-           User.findById(obj.id)
-               .then(user => {
-                   if (user) {
-                       done(null, user);
-                   }
-                   else {
-                       done(new Error('user id not found:' + objid, null));
-                   }
-               });
-           break;
-       case 'admin':
-           Admin.findById(obj.id)
-               .then(admin => {
-                   if (admin) {
-                       done(null, admin);
-                   } else {
-                       done(new Error('admin id not found:' + obj.id, null));
-                   }
-               });
-           break;
-       default:
-           done(new Error('no entity type:', obj.type), null);
-           break;
-   }
-});
-
-
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.use(function(req, res, next){
    res.locals.currentUser = req.user;
@@ -126,13 +75,9 @@ app.use(function(req, res, next){
 });
 
 app.use("/", indexRoutes);
+app.use("/user", userRoutes);
 app.use("/blogs", blogRoutes);
 app.use("/blogs/:id/comments", commentRoutes);
-
-
-// app.listen(process.env.PORT, process.env.IP, function(){
-//    console.log("The Travel Blog Server Has Started!");
-// });
 
 const listener = app.listen(process.env.PORT, function() {
    console.log('Your app is listening on port ' + listener.address().port);
