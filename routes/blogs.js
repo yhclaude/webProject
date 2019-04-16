@@ -7,6 +7,7 @@ var middleware = require("../middleware");
 //INDEX - show all blogs
 router.get("/", function(req, res){
     // Get all blogs from DB
+    console.log("show blogs");
     Blog.find({"check": true}, function(err, allBlogs){
         if(err){
             req.flash("error", err.message);
@@ -56,7 +57,6 @@ router.get("/new", middleware.isLoggedIn, function(req, res){
 // SHOW - shows more info about one blog
 router.get("/:id", function(req, res){
     //find the blog with provided ID
-
     Blog.findById(req.params.id).populate("comments").exec(function(err, foundBlog){
         if(err){
             req.flash("error", err.message);
@@ -65,6 +65,18 @@ router.get("/:id", function(req, res){
             console.log(foundBlog)
             //render show template with that blog
             res.render("blogs/show", {blog: foundBlog});
+        }
+    });
+});
+
+router.get("/search/name", function(req, res){
+    Blog.find({'name' : new RegExp(req.query.search, 'i')}, function(err, allBlogs){
+        if(err){
+            req.flash("error", err.message);
+            res.render("landing");
+        } else {
+            res.send(allBlogs);
+            // res.render("blogs/index",{blogs:allBlogs});
         }
     });
 });

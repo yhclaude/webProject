@@ -53,11 +53,11 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                <form class="form-inline">
+                <form class="form-inline" action="/blogs/search/name" method="GET">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Input the blog name" aria-label="Username" aria-describedby="basic-addon1">
+                        <input type="text" name="search" class="form-control" placeholder="Input the blog name">
                         <div class="input-group-apend">
-                            <button style="border-left-width: 0;border-top-left-radius: 0;border-bottom-left-radius: 0;" type="button" class="btn btn-outline-secondary">Search</button>
+                            <button style="border-left-width: 0;border-top-left-radius: 0;border-bottom-left-radius: 0;" type="submit" class="btn btn-outline-secondary">Search</button>
                         </div>
                     </div>
                 </form>

@@ -9,7 +9,7 @@ var express     = require("express"),
     Blog  = require("./models/blog"),
     Comment     = require("./models/comment"),
     User        = require("./models/user"),
-    GithubStrategy = require('passport-github').Strategy;
+    GithubStrategy = require('passport-github').Strategy,
     dotenvConfig = require('dotenv').config();
 
 //requiring routes
