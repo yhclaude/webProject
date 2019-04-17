@@ -1,0 +1,40 @@
+<% include ../partials/header %>
+    <div class="container">
+        <div class="thumbnail" style="padding:30px;margin-top: 40px; overflow: scroll">
+            <h3 style="margin: 20px 0;">Comments list of <%= blog.name %></h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align: center;">Comment</th>
+                        <th style="text-align: center;">Time</th>
+                        <th style="text-align: center;">Author</th>
+                        <th style="text-align: center;min-width: 185px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% blog.comments.forEach(function(comment){ %>
+                    <tr>
+                        <td style="text-align: center;line-height: 35px;"><%= comment.text %></td>
+                        <td style="text-align: center;line-height: 35px;"><%= comment.time %></td>
+                        <td style="text-align: center;line-height: 35px;"><%= comment.author.username  %></td>
+                        <td style="text-align: center;min-width: 185px;">
+                            <div class="row">
+                                <div class="col-md-6 col-6" style="text-align: right;">
+                                    <a style="width: 80px; margin-top: 8px;" class="btn btn-xs btn-warning" 
+                                    href="/blogs/<%=blog._id %>/comments/<%=comment._id %>/edit">Edit</a>
+                                </div>
+                                <div class="col-md-6 col-6" style="text-align: left;">
+                                    <form id="delete-form" action="/blogs/<%=blog._id %>/comments/<%=comment._id %>?_method=DELETE" method="POST">
+                                        <input style="width: 80px; margin-top: 8px;" type="submit" class="btn btn-xs btn-danger" value="Delete">
+                                    </form>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>   
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+<% include ../partials/footer %>
+

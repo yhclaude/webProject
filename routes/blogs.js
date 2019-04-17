@@ -25,6 +25,7 @@ router.post("/", middleware.isLoggedIn, function(req, res){
     var name = req.body.name;
     var image = req.body.image;
     var desc = req.body.description;
+    var add = req.body.address;
     var author = {
         id: req.user._id,
         username: req.user.username,
@@ -35,7 +36,7 @@ router.post("/", middleware.isLoggedIn, function(req, res){
     time = time.substring(0, time.length - 21);
     // new 2 lines!
     var check = false;
-    var newBlog = {name: name, image: image, description: desc, author:author, check:check, time: time};
+    var newBlog = {name: name, image: image, description: desc, author:author, check:check, time: time, address: add};
     // Create a new blog and save to DB
     Blog.create(newBlog, function(err, newlyCreated){
         if(err){
@@ -65,6 +66,20 @@ router.get("/:id", function(req, res){
             console.log(foundBlog)
             //render show template with that blog
             res.render("blogs/show", {blog: foundBlog});
+        }
+    });
+});
+
+router.get("/:id/comments", function(req, res){
+    //find the blog with provided ID
+    Blog.findById(req.params.id).populate("comments").exec(function(err, foundBlog){
+        if(err){
+            req.flash("error", err.message);
+            res.render("landing");
+        } else {
+            console.log(foundBlog)
+            //render show template with that blog
+            res.render("comments/show", {blog: foundBlog});
         }
     });
 });
@@ -112,6 +127,18 @@ router.delete("/:id",middleware.checkBlogOwnership, function(req, res){
           res.redirect("/blogs");
       }
    });
+});
+
+router.put("/approve/:id", middleware.checkBlogOwnership, function(req, res) {
+    Blog.findByIdAndUpdate(req.params.id, {$set:{check:true}}, function(err, foundBlog) {
+        if (err) {
+            req.flash("error", err.message);
+            res.redirect("/blogs");
+
+        } else {
+            res.redirect("back");
+        }
+    });
 });
 
 module.exports = router;

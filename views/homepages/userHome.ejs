@@ -132,11 +132,14 @@
                 </div>
                 <div class="col-md-6" style="padding-top: 20px;">
                     <h4><a><%= blog.name %></a></h4>
-                    <p style="margin-top: 10px; height: 136px; overflow: hidden;"><%= blog.description %></p>
+                    <p style="margin-top: 10px; height: 92px; overflow: hidden;"><%= blog.description %></p>
                     <p>
-                        <em>Submitted By <%= info.user.username %> at <%= blog.time %></em>
+                        <em>Submitted By <%= info.user.username %> at <%= blog.address %></em>
                     </p>
-                    <div class="row">
+                    <p>
+                        <em><%= blog.time %></em>
+                    </p>
+                    <div class="row"  style="margin-top:22px">
                         <div class="col-md-2 col-3">
                             <a class="btn btn-xs btn-warning blog-btn" href="/blogs/<%= blog._id %>/edit">Edit</a>
                         </div>
@@ -158,11 +161,14 @@
                 </div>
                 <div class="col-md-6" style="padding-top: 20px;">
                     <h4><a><%= blog.name %></a></h4>
-                    <p style="margin-top: 10px; height: 136px; overflow: hidden;"><%= blog.description %></p>
+                    <p style="margin-top: 10px; height: 92px; overflow: hidden;"><%= blog.description %></p>
                     <p>
-                        <em>Submitted By <%= info.user.username %> at <%= blog.time %></em>
+                        <em>Submitted By <%= info.user.username %> at <%= blog.address %></em>
                     </p>
-                    <div class="row">
+                    <p>
+                        <em><%= blog.time %></em>
+                    </p>
+                    <div class="row" style="margin-top:22px">
                         <div class="col-md-2 col-3">
                             <a class="btn btn-xs btn-primary blog-btn" href="/blogs/<%= blog._id %>">Detail</a>
                         </div>
@@ -185,6 +191,7 @@
                 <thead>
                     <tr>
                         <th style="text-align: center;">Comment</th>
+                        <th style="text-align: center;">Blog</th>
                         <th style="text-align: center;">Time</th>
                         <th style="text-align: center;min-width: 195px;">Action</th>
                     </tr>
@@ -196,6 +203,7 @@
                                 if (realComment._id == comment.toString()){ %>
                                 <tr>
                                     <td style="text-align: center;line-height: 35px;"><%= realComment.text %></td>
+                                    <td style="text-align: center;line-height: 35px;"><%= blog.name %></td>
                                     <td style="text-align: center;line-height: 35px;"><%= realComment.time %></td>
                                     <td style="text-align: center;min-width: 195px;">
                                         <div class="row">

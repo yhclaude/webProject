@@ -17,13 +17,59 @@
                     <label for="description">Blog Description</label>
                     <textarea class="form-control" id="description" placeholder="Enter description" name="description" style="height: 200px;"></textarea>
                 </div>
+                <div class="form-group" style="display: none;">
+                    <input type="text" id="address" name="address" value="haha">
+                </div>
                 <div class="form-group">
-                    <button class="btn btn-lg btn-primary btn-block">Submit!</button>
+                    <button id="submit" class="btn btn-lg btn-primary btn-block" type="button">Submit!</button>
+                </div>
+                <div class="form-group" style="display: none;">
+                    <button id="realSubmit" class="btn btn-lg btn-primary btn-block" type="submit">Submit!</button>
                 </div>
             </form>
             <a href="/blogs">Go Back</a>
         </div>
     </div>
 </div>
-<% include ../partials/footer %>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAwszuiE1GeVTOl3wbitkppJ_MT97xLy8M"></script>
+<script>
+    function showLocation(position) {
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+        var latLngData = position.coords.latitude.toFixed(6) + "," + position.coords.longitude.toFixed(6);
+        var geocoder  = new google.maps.Geocoder();             // create a geocoder object
+        var location  = new google.maps.LatLng(latitude, longitude);    // turn coordinates into an object          
+        geocoder.geocode({'latLng': location}, function (results, status) {
+            if(status == google.maps.GeocoderStatus.OK) {           // if geocode success
+                var add=results[0].formatted_address;         // if address found, pass to processing function
+                $("#address").val(add);
+                $("#realSubmit").click();
+            }
+        });
+    }
+
+    function errorHandler(err) {
+        if(err.code == 1) {
+            alert("Error: Access is denied!");
+        }else if( err.code == 2) {
+            alert("Error: Position is unavailable!");
+        }
+    }
+    function getLocation(){
+        if(navigator.geolocation){
+        // timeout at 60000 milliseconds (60 seconds)
+            var options = {timeout:60000};
+            navigator.geolocation.getCurrentPosition(showLocation, errorHandler, options);
+        } else {
+            alert("Sorry, browser does not support geolocation!");
+        }
+    }
+    $('#submit').click(getLocation);
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>
 
