@@ -75,8 +75,8 @@ router.get("/search/name", function(req, res){
             req.flash("error", err.message);
             res.render("landing");
         } else {
-            res.send(allBlogs);
-            // res.render("blogs/index",{blogs:allBlogs});
+            //res.send(allBlogs);
+            res.render("blogs/search",{blogs:allBlogs});
         }
     });
 });
