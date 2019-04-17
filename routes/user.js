@@ -40,6 +40,42 @@ router.get("/", function(req, res){
     }
 });
 
+router.put("/approve/:id", function(req, res) {
+    Blog.findByIdAndUpdate(req.params.id, {$set:{check:true}}, function(err, foundBlog) {
+        if (err) {
+            req.flash("error", err.message);
+            res.redirect("/blogs");
+
+        } else {
+            res.redirect("back");
+        }
+    });
+});
+
+router.put("/edit/:id", function(req, res) {
+    if (req.body.password != req.body.password1) {
+        res.redirect("back");
+    } else {
+        User.findByIdAndUpdate(req.params.id, {$set:{username:req.body.username, image:req.body.photo}}, function(err, foundUser) {
+            if (err) {
+                req.flash("error", err.message);
+                res.redirect("back");
+            } else {
+                foundUser.setPassword(req.body.password, function() {
+                    foundUser.save();
+                    res.send('password reset successful');
+                });
+                // sanitizedUser.setPassword(newPass, function() {
+                //     sanitizedUser.save();
+                //     res.send('password reset successful');
+                // });
+                // foundUser.save();
+                //res.redirect("back");
+            }
+        });
+    }
+});
+
 // //CREATE - add new blog to admin and wait for checking by admin 
 // router.post("/", middleware.isLoggedIn, function(req, res){
 //     // get data from form and add to blogs array

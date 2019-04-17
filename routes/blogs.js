@@ -102,6 +102,21 @@ router.put("/:id",middleware.checkBlogOwnership, function(req, res){
     });
 });
 
+router.put("/approve/:id", function(req, res) {
+    Blog.findByIdAndUpdate(req.params.id, {$set:{check:true}}, function(err, foundBlog) {
+        if (err) {
+            req.flash("error", err.message);
+            res.redirect("/blogs");
+
+        } else {
+            res.redirect("back");
+        }
+    });
+});
+
+router.put("")
+
+
 // DESTROY BLOG ROUTE
 router.delete("/:id",middleware.checkBlogOwnership, function(req, res){
     Blog.findByIdAndRemove(req.params.id, function(err){
