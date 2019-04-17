@@ -2,28 +2,28 @@ var express = require("express");
 var router  = express.Router();
 var User = require("../models/user");
 var Blog = require("../models/blog");
+var Comment = require("../models/comment");
 var middleware = require("../middleware");
 
 
 //INDEX - show all blogs
 router.get("/", function(req, res){
-    // Get all blogs from DB
-    // Blog.find({"check": true}, function(err, allBlogs){
-    //    if(err){
-    //        console.log(err);
-    //    } else {
-    //        //res.send(allBlogs);
-    //       res.render("blogs/index",{blogs:allBlogs});
-    //    }
-    // });
     if (req.user.identity === "normal") {
         Blog.find({"author": {id: req.user._id, username: req.user.username, image: req.user.image}}, function(err, allBlogs){
             if(err){
                 req.flash("error", err.message);
                 res.render("landing");
             } else {
-                var info = {user: req.user, blogs:allBlogs};
-                res.render("homepages/userHome", {info: info});
+                Comment.find({"author": {id: req.user._id, username: req.user.username}}, function(error, allComments){
+                    if(error){
+                        req.flash("error", error.message);
+                        res.render("landing");
+                    } else {
+                        var info = {user: req.user, blogs:allBlogs, comments: allComments};
+                        res.render("homepages/userHome", {info: info});
+                    }
+                });
+                
             }
         });
         // res.render("homepages/userHome");

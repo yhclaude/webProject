@@ -79,6 +79,9 @@ a {
         width: 320px;
         margin: 25px auto;
     }
+    .user-blog-addbtn {
+        text-align: left;
+    }
 }
 @media (min-width: 500px) {
     .newBlog-div {
@@ -87,6 +90,9 @@ a {
     }
     .caption-full {
         margin-top: -40px;
+    }
+    .user-blog-addbtn {
+        text-align: right;
     }
 }
 
