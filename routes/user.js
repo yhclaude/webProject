@@ -40,6 +40,27 @@ router.get("/", function(req, res){
     }
 });
 
+router.put("/edit/:id", middleware.isLoggedIn, function(req, res) {
+    if (req.body.password != req.body.password1) {
+        res.redirect("back");
+        req.flash("error", "Confirm that you input same passwords.");
+    } else {
+        User.findByIdAndUpdate(req.params.id, {$set:{image:req.body.photo}}, function(err, foundUser) {
+            if (err) {
+                req.flash("error", err.message);
+                res.redirect("back");
+            } else {
+                foundUser.setPassword(req.body.password, function() {
+                    foundUser.save();
+                    // res.send('password reset successful');
+                    req.flash("success", "Profile edited!");
+                    res.redirect("/login");
+                });
+            }
+        });
+    }
+});
+
 // //CREATE - add new blog to admin and wait for checking by admin 
 // router.post("/", middleware.isLoggedIn, function(req, res){
 //     // get data from form and add to blogs array
